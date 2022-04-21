@@ -1,0 +1,50 @@
+﻿@model StudentApplication.Model.ViewModels.TblSubjectsViewModel
+
+
+<div class="row">
+    <div class="col-sm-4">
+        <form asp-controller="Subject" asp-action="AddUpdateSubjects" method="post">
+            <div class="mb-3">
+                <input type="text" class="form-control" id="classId" asp-for="SubjectId" name="SubjectId" hidden>
+                <label class="form-label">Class Name</label>
+                <select asp-for="ClassId" asp-items="@(new SelectList(ViewBag.ClassesList,"ClassId","ClassName"))" name="ClassId" class="form-control">
+                    <option value="0">--Select--</option>
+                </select>
+                <label class="form-label">Subject Name</label>
+                <input type="text" class="form-control" id="subjectName" asp-for="SubjectName" name="SubjectName">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <label class="form-label">@(TempData["Status"]!=null?TempData["Status"].ToString():"")</label>
+        </form>
+    </div>
+
+    <div class="col-sm-8">
+        <table class="table table-border">
+            <thead>
+                <tr>
+                    @*<td>Subject ID</td>*@
+                    <td>Class</td>
+                    <td>Subject Name</td>
+                    <td>Edit</td>
+                    <td>Delete</td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.SubjectList != null)
+                {
+                    @foreach (var item in ViewBag.SubjectList)
+                    {
+                        <tr>
+                            @*<td>@item.SubjectId</td>*@
+                            <td>@item.ClassName</td>
+                            <td>@item.SubjectName</td>
+                            <td><a href="~/Subject/Edit/@item.SubjectId">Edit</a></td>
+                            <td><a href="~/Subject/Delete/@item.SubjectId" onclick="return confirm('Are you sure to delete?')">Delete</a></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

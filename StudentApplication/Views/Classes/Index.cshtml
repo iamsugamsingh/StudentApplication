@@ -1,0 +1,43 @@
+﻿@model StudentApplication.Model.ViewModels.TblClassViewModel
+
+
+
+<div class="row">
+    <div class="col-sm-4">
+        <form asp-controller="Classes" asp-action="AddUpdateClasses" method="post">
+            <div class="mb-3">
+                <input type="text" class="form-control" id="classId" asp-for="ClassId" name="ClassId" hidden>
+                <label class="form-label">Class Name</label>
+                <input type="text" class="form-control" id="className" asp-for="ClassName" name="ClassName">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <label class="form-label">@(TempData["Status"]!=null?TempData["Status"].ToString():"")</label>
+        </form>
+    </div>
+
+    <div class="col-sm-8">
+        <table class="table table-border">
+            <thead>
+                <tr>
+                    @*<td>Class ID</td>*@
+                    <td>Class</td>
+                    <td>Edit</td>
+                    <td>Delete</td>
+                </tr>
+            </thead>
+            <tbody>
+                @if(ViewBag.ClassesList!=null){
+                @foreach(var item in ViewBag.ClassesList){
+                <tr>
+                    @*<td>@item.ClassId</td>*@
+                    <td>@item.ClassName</td>
+                    <td><a href="~/Classes/Edit/@item.ClassId">Edit</a></td>
+                    <td><a href="~/Classes/Delete/@item.ClassId" onclick="return confirm('Are you sure to delete?')">Delete</a></td>
+                </tr>
+                }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

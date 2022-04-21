@@ -1,0 +1,130 @@
+﻿@model StudentApplication.Model.ViewModels.TblStudentViewModel
+
+
+<div class="row">
+    <div class="col-sm-4">
+        <form asp-controller="Student" asp-action="AddUpdateStudents" method="post">
+            <div class="mb-3">
+                <input type="text" class="form-control" id="studentid" asp-for="Id" name="Id" hidden>
+
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-control" id="firstName" asp-for="FirstName" name="FirstName">
+
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lastName" asp-for="LastName" name="LastName">
+
+                <label class="form-label">Class</label>
+                <select asp-for="ClassId" asp-items="@(new SelectList(ViewBag.ClassesList,"ClassId","ClassName"))" name="ClassId" id="classDDL" class="form-control">
+                    <option value="0">--Select--</option>
+
+                </select>
+
+
+
+                <label class="form-label">Subject Name</label>
+                <select asp-for="SubjectId" name="SubjectId" asp-items="@(new SelectList(ViewBag.subjectList,"SubjectId","SubjectName"))" class="form-control" id="SubjectDDL">
+                    <option value="0">--Select--</option>
+                </select>
+
+                <label class="form-label">Marks</label>
+                <input type="text" class="form-control" id="marks" asp-for="Marks" name="Marks">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <label class="form-label">@(TempData["Status"]!=null?TempData["Status"].ToString():"")</label>
+        </form>
+    </div>
+
+    <div class="col-sm-8">
+        <table class="table table-border">
+            <thead>
+                <tr>
+                    @*<td>Student ID</td>*@
+                    <td>First Name</td>
+                    <td>Last Name</td>
+                    <td>Class</td>
+                    <td>Subject Name</td>
+                    <td>Marks</td>
+                    <td>Edit</td>
+                    <td>Delete</td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.StudentList != null)
+                {
+                    string fname = "";
+                    @foreach (var item in ViewBag.StudentList)
+                    {
+                        <tr>
+                            @if (fname != item.FirstName)
+                            {
+                                @*<td>@item.Id</td>*@
+                                <td>@item.FirstName</td>
+                                <td>@item.LastName</td>
+                            }
+                            else
+                            {
+                                @*<td></td>*@
+                                <td></td>
+                                <td></td>
+                            }
+                            <td>@item.ClassName</td>
+                            <td>@item.SubjectName</td>
+                            <td>@item.Marks</td>
+                            <td><a href="~/student/Edit/@item.Id">Edit</a></td>
+                            <td><a href="~/student/Delete/@item.Id" onclick="return confirm('Are you sure to delete?')">Delete</a></td>
+                        </tr>
+
+                        fname = item.FirstName;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+
+
+   
+    $("#classDDL").change(function () {
+        $.ajax({
+        url: '@Url.Action("GetSubjectDDL","student")',
+        type: 'GET',
+        contentType: 'Application/Json',
+        data: { 'ClassId': $("#classDDL").val() },
+            success: function (res) {
+                console.log(res)
+                $("#SubjectDDL").empty();
+                $("#SubjectDDL").append(`<option value="0">--Select--</option>`);
+
+                for (let i = 0; i < res.length; i++) {
+                    $("#SubjectDDL").append(`<option value="${res[i].subjectId}">${res[i].subjectName}</option>`);
+                }
+        },
+        error: function (red) {
+
+        }
+
+    })
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
